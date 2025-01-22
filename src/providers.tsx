@@ -8,14 +8,17 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { HomePage } from "./pages/home";
 import { ErrorPage } from "./pages/error";
-import { FindGamePage } from "./pages/game";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    async lazy() {
+      const HomePage = lazy(() => import("./pages/home/ui/homePage"));
+      return {
+        Component: HomePage,
+      };
+    },
     errorElement: <ErrorPage />,
   },
   {
@@ -24,7 +27,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/game",
-        element: <FindGamePage />,
+        // element: <FindGamePage />,
+        async lazy() {
+          const FindGamePage = lazy(
+            () => import("./pages/game/ui/findGamePage")
+          );
+          return {
+            Component: FindGamePage,
+          };
+        },
       },
       {
         path: "/game/:gameId",

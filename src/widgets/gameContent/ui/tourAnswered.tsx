@@ -1,4 +1,3 @@
-import { getRuDeclination } from "@/shared/lib/delination";
 import { timeSpanToString } from "@/shared/lib/time";
 import { TourResult } from "@/shared/types/player";
 import { Separator } from "@/shared/ui/separator";
