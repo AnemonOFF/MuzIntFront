@@ -91,8 +91,8 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
       ([] as JSX.Element[])
         .concat(
           ...block.questions
-            // .map((question) => ({ ...question, sort: Math.random() }))
-            // .sort((a, b) => a.sort - b.sort)
+            .map((question) => ({ ...question, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
             .map((question) => (
               <div
                 className="grid grid-cols-[1fr_75px] gap-2"
