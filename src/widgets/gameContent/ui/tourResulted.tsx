@@ -80,7 +80,7 @@ const TourResulted: React.FC<TourResultedProps> = ({ gameId }) => {
       <p>Ты сделал ставку за {time}</p>
       <p>
         Ты получил {tourResult.points} {pointsText} и {tourResult.extraPoints}{" "}
-        {extraPointsText}
+        {extraPointsText} ({tourResult.points + tourResult.extraPoints} всего)
       </p>
     </div>
   );

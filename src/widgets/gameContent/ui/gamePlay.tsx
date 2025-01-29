@@ -86,6 +86,12 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
     setBlock(blocks[currentBlockIndex + 1]);
   };
 
+  const answerVariants = useMemo(
+    () =>
+      block.answerVariants.filter((v) => answers.some((a) => a.order === v)),
+    [block.answerVariants, answers]
+  );
+
   const questions = useMemo(
     () =>
       ([] as JSX.Element[])
@@ -112,6 +118,7 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
                     {block.answerVariants.map((variant) => (
                       <SelectItem
                         value={variant.toString()}
+                        disabled={!answerVariants.includes(variant)}
                         key={`q_${question.id}_a_${variant}`}
                       >
                         {variant}
@@ -124,7 +131,7 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
             .map((x) => [x, <Separator />])
         )
         .slice(0, -1),
-    [block.answerVariants, block.questions, isPending]
+    [answerVariants, block.answerVariants, block.questions, isPending]
   );
 
   if (tourResult?.isAnswered) {
