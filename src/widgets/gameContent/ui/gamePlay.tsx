@@ -21,6 +21,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import ConfirmModal from "@/shared/ui/confirmModal";
 import { Separator } from "@/shared/ui/separator";
+import Rand from "rand-seed";
 
 export interface GamePlayProps {
   game: Game;
@@ -83,22 +84,28 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
       return;
     }
     const currentBlockIndex = blocks.indexOf(block);
-    setBlock(blocks[currentBlockIndex + 1]);
+    const newBlock = blocks[currentBlockIndex + 1];
+    setBlock(newBlock);
   };
 
   const answerVariants = useMemo(
     () =>
-      block.answerVariants.filter((v) => answers.some((a) => a.order === v)),
+      block.answerVariants.filter((v) => !answers.some((a) => a.order === v)),
     [block.answerVariants, answers]
   );
+
+  const sortedQuestions = useMemo(() => {
+    const rand = new Rand(`${game.id}_${block.id}`);
+    return block.questions
+      .map((question) => ({ ...question, sort: rand.next() }))
+      .sort((a, b) => a.sort - b.sort);
+  }, [game.id, block]);
 
   const questions = useMemo(
     () =>
       ([] as JSX.Element[])
         .concat(
-          ...block.questions
-            .map((question) => ({ ...question, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
+          ...sortedQuestions
             .map((question) => (
               <div
                 className="grid grid-cols-[1fr_75px] gap-2"
@@ -131,7 +138,7 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
             .map((x) => [x, <Separator />])
         )
         .slice(0, -1),
-    [answerVariants, block.answerVariants, block.questions, isPending]
+    [answerVariants, block.answerVariants, sortedQuestions, isPending]
   );
 
   if (tourResult?.isAnswered) {
