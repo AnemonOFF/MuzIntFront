@@ -18,6 +18,7 @@ export type Tour = {
   id: number;
   name: string;
   order: number;
+  takeIntoResult: boolean;
   blocks: Block[];
 };
 

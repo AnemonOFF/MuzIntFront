@@ -142,7 +142,12 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
   );
 
   if (tourResult?.isAnswered) {
-    return <TourAnswered tourResult={tourResult} />;
+    return (
+      <TourAnswered
+        tourResult={tourResult}
+        takeIntoResult={currentTour.takeIntoResult}
+      />
+    );
   }
 
   return (
@@ -151,6 +156,11 @@ const GamePlay: React.FC<GamePlayProps> = ({ game, gamePack }) => {
         <span className="font-bold">Тур {currentTour.order}</span>:{" "}
         {currentTour.name}
       </h1>
+      {!currentTour.takeIntoResult && (
+        <p className="font-semibold">
+          Результаты этого тура не идут в общий зачёт
+        </p>
+      )}
       <p>
         Что говорит ваша интуиция?
         <br />В какой последовательности прозвучат эти треки сегодня?

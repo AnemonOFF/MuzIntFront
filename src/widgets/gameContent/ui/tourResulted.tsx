@@ -3,6 +3,7 @@ import { getRuDeclination } from "@/shared/lib/delination";
 import { timeSpanToString } from "@/shared/lib/time";
 import { cn } from "@/shared/lib/utils";
 import { Game } from "@/shared/types/game";
+import { GamePack } from "@/shared/types/gamePack";
 import Loader from "@/shared/ui/loader";
 import { Separator } from "@/shared/ui/separator";
 import React from "react";
@@ -10,9 +11,10 @@ import { useShallow } from "zustand/react/shallow";
 
 export interface TourResultedProps {
   gameId: Game["id"];
+  gamePack: GamePack;
 }
 
-const TourResulted: React.FC<TourResultedProps> = ({ gameId }) => {
+const TourResulted: React.FC<TourResultedProps> = ({ gameId, gamePack }) => {
   const { currentTourId, playerId } = usePlayerStore(
     useShallow((state) => ({
       currentTourId: state.games[gameId].gameState!.currentTourId!,
@@ -23,12 +25,18 @@ const TourResulted: React.FC<TourResultedProps> = ({ gameId }) => {
     playerId,
     currentTourId
   );
+  const currentTour = gamePack.tours.find((t) => t.id === currentTourId)!;
 
   if (!isSuccess) return <Loader text="Загружаем результаты" />;
 
   if (!tourResult.isAnswered) {
     return (
       <div className="space-y-5">
+        {!currentTour.takeIntoResult && (
+          <p className="font-semibold">
+            Результаты этого тура не идут в общий зачёт
+          </p>
+        )}
         <p>
           К сожалению вы не ответили на этот тур
           <br />И заработали 0 баллов
@@ -53,6 +61,11 @@ const TourResulted: React.FC<TourResultedProps> = ({ gameId }) => {
 
   return (
     <div className="space-y-5">
+      {!currentTour.takeIntoResult && (
+        <p className="font-semibold">
+          Результаты этого тура не идут в общий зачёт
+        </p>
+      )}
       <p>А вот и результаты тура:</p>
       {([] as JSX.Element[])
         .concat(

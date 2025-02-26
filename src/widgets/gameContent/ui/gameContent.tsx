@@ -49,7 +49,7 @@ const GameContent: React.FC<GameContentProps> = ({ gameId }) => {
   if (storeGame.gameState.status === GameStatus.TourResults) {
     return (
       <div className="min-h-screen w-screen p-5 flex items-center justify-center">
-        <TourResulted gameId={game.id} />
+        <TourResulted gameId={game.id} gamePack={gamePack} />
       </div>
     );
   }

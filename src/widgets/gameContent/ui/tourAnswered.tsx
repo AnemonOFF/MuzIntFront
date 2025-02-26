@@ -5,14 +5,23 @@ import React from "react";
 
 export interface TourAnsweredProps {
   tourResult: TourResult;
+  takeIntoResult: boolean;
 }
 
-const TourAnswered: React.FC<TourAnsweredProps> = ({ tourResult }) => {
+const TourAnswered: React.FC<TourAnsweredProps> = ({
+  tourResult,
+  takeIntoResult,
+}) => {
   const time = timeSpanToString(tourResult.answerTimeSpan!);
 
   return (
     <div className="space-y-5">
-      <p>Голос твоей интуиции в этом туре:</p>
+      <p className="font-semibold">Голос твоей интуиции в этом туре:</p>
+      {!takeIntoResult && (
+        <p className="font-semibold">
+          Результаты этого тура не идут в общий зачёт
+        </p>
+      )}
       {([] as JSX.Element[])
         .concat(
           ...tourResult.answers
