@@ -28,7 +28,7 @@ const TourAnswered: React.FC<TourAnsweredProps> = ({ tourResult }) => {
             .map((x) => [x, <Separator />])
         )
         .slice(0, -1)}
-      <p>Ты сделал ставку за {time}</p>
+      <p>Твоё время ставок - {time}</p>
     </div>
   );
 };

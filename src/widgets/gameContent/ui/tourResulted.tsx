@@ -77,7 +77,7 @@ const TourResulted: React.FC<TourResultedProps> = ({ gameId }) => {
             .map((x) => [x, <Separator key={`separator_${x.key}`} />])
         )
         .slice(0, -1)}
-      <p>Ты сделал ставку за {time}</p>
+      <p>Твоё время ставок - {time}</p>
       <p>
         Ты получил {tourResult.points} {pointsText} и {tourResult.extraPoints}{" "}
         {extraPointsText} ({tourResult.points + tourResult.extraPoints} всего)

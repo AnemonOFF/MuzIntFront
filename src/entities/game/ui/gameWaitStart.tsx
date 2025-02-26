@@ -5,7 +5,7 @@ export interface GameWaitStartProps {}
 const GameWaitStart: React.FC<GameWaitStartProps> = () => {
   return (
     <div className="">
-      <p>Ожидаем начала игры</p>
+      <p>Регистрация прошла успешно! Ожидаем начала игры</p>
     </div>
   );
 };
