@@ -46,7 +46,7 @@ const TourResulted: React.FC<TourResultedProps> = ({ gameId, gamePack }) => {
   }
 
   const pointsText = getRuDeclination(tourResult.points, {
-    one: "бал",
+    one: "балл",
     few: "балла",
     many: "баллов",
   });
