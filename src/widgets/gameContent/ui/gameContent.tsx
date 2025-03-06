@@ -6,6 +6,7 @@ import Loader from "@/shared/ui/loader";
 import React from "react";
 import GamePlay from "./gamePlay";
 import TourResulted from "./tourResulted";
+import TourEnded from "./tourEnded";
 
 export interface GameContentProps {
   gameId: Game["id"];
@@ -22,45 +23,23 @@ const GameContent: React.FC<GameContentProps> = ({ gameId }) => {
   if (!storeGame.gameState || !isGameLoaded || !isGamePackLoaded)
     return <Loader text="Загрузка игры" />;
 
-  if (storeGame.gameState.status === GameStatus.Ended) {
-    return (
-      <div className="min-h-screen w-screen p-5 flex items-center justify-center">
-        <GameEnded gameId={gameId} />
-      </div>
-    );
-  }
-
-  if (storeGame.gameState.status === GameStatus.WaitForStart) {
-    return (
-      <div className="min-h-screen w-screen p-5 flex items-center justify-center">
+  return (
+    <div className="min-h-screen w-screen p-5 flex items-center justify-center">
+      {storeGame.gameState.status === GameStatus.Ended ? (
+        <GameEnded gameId={gameId} gamePack={gamePack} />
+      ) : storeGame.gameState.status === GameStatus.WaitForStart ? (
         <GameWaitStart />
-      </div>
-    );
-  }
-
-  if (storeGame.gameState.status === GameStatus.TourInProgress) {
-    return (
-      <div className="min-h-screen w-screen p-5 flex items-center justify-center">
+      ) : storeGame.gameState.status === GameStatus.TourInProgress ? (
         <GamePlay game={game} gamePack={gamePack} />
-      </div>
-    );
-  }
-
-  if (storeGame.gameState.status === GameStatus.TourResults) {
-    return (
-      <div className="min-h-screen w-screen p-5 flex items-center justify-center">
+      ) : storeGame.gameState.status === GameStatus.TourEnd ? (
+        <TourEnded gameId={game.id} gamePack={gamePack} />
+      ) : storeGame.gameState.status === GameStatus.TourResults ? (
         <TourResulted gameId={game.id} gamePack={gamePack} />
-      </div>
-    );
-  }
-
-  if (storeGame.gameState.status === GameStatus.Results) {
-    return (
-      <div className="min-h-screen w-screen p-5 flex items-center justify-center">
-        Результаты
-      </div>
-    );
-  }
+      ) : storeGame.gameState.status === GameStatus.Results ? (
+        "Результаты"
+      ) : null}
+    </div>
+  );
 };
 
 export default React.memo(GameContent);

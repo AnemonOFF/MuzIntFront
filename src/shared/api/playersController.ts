@@ -1,4 +1,6 @@
+import { Game } from "../types/game";
 import { Tour } from "../types/gamePack";
+import { Collection } from "../types/generic";
 import {
   AddPlayerRequest,
   AnswerRequest,
@@ -19,6 +21,13 @@ const getTourAnswers = async (playerId: Player["id"], tourId: Tour["id"]) => {
   return response.data;
 };
 
+const getGameResults = async (playerId: Player["id"], gameId: Game["id"]) => {
+  const response = await apiClient.get<Collection<TourResult>>(
+    `/players/${playerId}/game/${gameId}`
+  );
+  return response.data.items;
+};
+
 const answerTour = async (data: AnswerRequest) => {
   const response = await apiClient.post<TourResult>(`/players/answer`, data);
   return response.data;
@@ -28,6 +37,7 @@ const playersController = {
   addPlayer,
   getTourAnswers,
   answerTour,
+  getGameResults,
 };
 
 export default playersController;

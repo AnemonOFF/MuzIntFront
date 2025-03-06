@@ -49,4 +49,10 @@ export const playerKey = {
   detail: (id: Player["id"]) => [...playerKey.details(), { id: id }] as const,
   tourResult: (id: Player["id"], tourId: Tour["id"]) =>
     [...playerKey.detail(id), "result", tourId] as const,
+  gameResult: (id: Player["id"], gameId: Game["id"]) => [
+    ...playerKey.detail(id),
+    "result",
+    "game",
+    gameId,
+  ],
 };
