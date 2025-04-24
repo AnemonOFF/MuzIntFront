@@ -4,18 +4,14 @@ import { Button } from "./button";
 
 export interface ConfirmModalProps {
   text: string;
+  trigger: React.ReactNode;
   onConfirm: () => void;
-  trigger?: React.ReactNode;
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+const ConfirmAction: React.FC<ConfirmModalProps> = ({
   onConfirm,
   trigger,
   text,
-  isOpen,
-  onOpenChange,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -24,12 +20,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     onConfirm();
   };
 
-  const changeOpen = onOpenChange ?? setOpen;
-
   return (
     <Modal
-      open={isOpen ?? open}
-      onOpenChange={changeOpen}
+      open={open}
+      onOpenChange={setOpen}
       trigger={trigger}
       title="Подтвердите действие"
       content={<p>{text}</p>}
@@ -38,11 +32,11 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <Button variant="outline" onClick={confirm}>
             Подтвердить
           </Button>
-          <Button onClick={() => changeOpen(false)}>Отмена</Button>
+          <Button onClick={() => setOpen(false)}>Отмена</Button>
         </div>
       }
     />
   );
 };
 
-export default React.memo(ConfirmModal);
+export default React.memo(ConfirmAction);

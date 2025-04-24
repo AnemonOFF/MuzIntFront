@@ -19,7 +19,7 @@ import {
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export interface ModalProps {
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
   content: React.ReactNode;
   footer?: React.ReactNode;
   title?: React.ReactNode;
@@ -46,7 +46,7 @@ const Modal: React.FC<ModalProps> = ({
         open={openProps ?? open}
         onOpenChange={onOpenChangeProps ?? setOpen}
       >
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
         <DialogContent className="max-w-none w-fit">
           {(title || description) && (
             <DialogHeader>
@@ -68,7 +68,7 @@ const Modal: React.FC<ModalProps> = ({
       open={openProps ?? open}
       onOpenChange={onOpenChangeProps ?? setOpen}
     >
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent>
         {(title || description) && (
           <DrawerHeader className="text-left">

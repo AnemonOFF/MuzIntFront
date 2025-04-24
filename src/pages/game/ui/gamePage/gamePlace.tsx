@@ -8,6 +8,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import GamePageContent from "./gamePageContent";
 import { SignalRPlayerProvider } from "@/shared/api/signalR";
+import { gamesController } from "@/shared/api";
+import ConfirmModal from "@/shared/ui/confirmModal";
+import { Player } from "@/shared/types/player";
 
 export interface GamePlaceProps {
   gameId: Game["id"];
@@ -21,6 +24,8 @@ const GamePlace: React.FC<GamePlaceProps> = ({ gameId }) => {
   const addGameToStore = usePlayerStore((state) => state.addGame);
   const setConnection = usePlayerStore((state) => state.setConnection);
   const { mutate: addPlayer, isPending } = useAddPlayerMutation();
+  const [isLoading, setLoading] = useState(false);
+  const [loadedPlayer, setLoadedPlayer] = useState<Player>();
 
   if (isGameDataExist) {
     return (
@@ -30,8 +35,8 @@ const GamePlace: React.FC<GamePlaceProps> = ({ gameId }) => {
     );
   }
 
-  const onEnter = () => {
-    addPlayer(
+  const createPlayer = async () => {
+    await addPlayer(
       {
         gameId: gameId,
         name: name,
@@ -50,6 +55,33 @@ const GamePlace: React.FC<GamePlaceProps> = ({ gameId }) => {
           }
         },
       }
+    );
+  };
+
+  const onEnter = () => {
+    setLoading(true);
+    gamesController
+      .getPlayerByPlayArea(gameId, place)
+      .then((data) => {
+        setLoadedPlayer(data);
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error) && error.response) {
+          const errors = Object.values(error.response.data.errors) as string[];
+          if (errors[0] === "UnknownPlayer") createPlayer();
+          else setErrorMessage(errors[0]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const onConfirm = () => {
+    if (!loadedPlayer) return;
+    addGameToStore(
+      gameId,
+      loadedPlayer.id,
+      loadedPlayer.name,
+      loadedPlayer.playArea
     );
   };
 
@@ -82,7 +114,11 @@ const GamePlace: React.FC<GamePlaceProps> = ({ gameId }) => {
             required
           />
         </div>
-        <Button className="w-full" onClick={onEnter} disabled={isPending}>
+        <Button
+          className="w-full"
+          onClick={onEnter}
+          disabled={isPending || isLoading}
+        >
           Войти
         </Button>
         {errorMessage && (
@@ -90,6 +126,12 @@ const GamePlace: React.FC<GamePlaceProps> = ({ gameId }) => {
             <AlertTitle>{errorMessage}</AlertTitle>
           </Alert>
         )}
+        <ConfirmModal
+          isOpen={!!loadedPlayer}
+          onOpenChange={() => setLoadedPlayer(undefined)}
+          onConfirm={onConfirm}
+          text="Игрок с таким местом уже зарегистрирован, вы уверены, что это ваше место?"
+        />
       </div>
     </div>
   );
